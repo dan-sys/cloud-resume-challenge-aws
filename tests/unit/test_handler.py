@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from resume_challenge import app
+from resume_lambda import app
 
 
 @pytest.fixture()
