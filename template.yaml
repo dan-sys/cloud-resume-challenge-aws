@@ -11,18 +11,32 @@ Globals:
     Timeout: 3
     MemorySize: 128
 
+Parameters:
+  DomainName:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: "domain name of the website"
+    Default: /DomainName
+  HostedZoneId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: "R53 hosted zone ID used for the domain"
+    Default: /HostedZoneId
+  CertificateARN:
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: "arn for SSL Certificate"
+    Default: /CertificateARN
+
 Resources:
   HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function # 
     Properties:
-      CodeUri: hello_world/
+      CodeUri: resume_challenge/
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
       - x86_64
       Events:
         HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api #
           Properties:
             Path: /hello
             Method: get
@@ -54,6 +68,48 @@ Resources:
                 - !Ref ResumeBucket
                 - /*
       Bucket: !Ref ResumeBucket
+
+  # ACMCert:
+  #   Type: AWS::CertificateManager::Certificate
+  #   Properties:
+  #     DomainName: !Ref DomainName
+  #     ValidationMethod: DNS
+
+  CloudFrontDistro:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateARN
+          SslSupportMethod: sni-only
+        Aliases:
+          - !Ref DomainName
+        DefaultCacheBehavior:
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: www.clouddanny.net.s3-website-us-east-1.amazonaws.com
+          DefaultTTL: 0
+          MinTTL: 0
+          MaxTTL: 0
+          ForwardedValues:
+             QueryString: false
+        Origins:
+          - DomainName: www.clouddanny.net.s3-website-us-east-1.amazonaws.com
+            Id: www.clouddanny.net.s3-website-us-east-1.amazonaws.com
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        Enabled: "true"
+        DefaultRootObject: index.html
+
+  Route53Record:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId:  !Ref HostedZoneId # TODO: Don't hardcode me
+      RecordSets:
+        - Name: !Ref DomainName # TODO: Don't hardcode me
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt CloudFrontDistro.DomainName
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
