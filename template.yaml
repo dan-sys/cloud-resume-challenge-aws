@@ -5,7 +5,6 @@ Description: >
 
   Sample SAM Template for sam-app
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
@@ -26,19 +25,19 @@ Parameters:
     Default: /CertificateARN
 
 Resources:
-  HelloWorldFunction:
+  ResumeFunction:
     Type: AWS::Serverless::Function # 
     Properties:
-      CodeUri: resume_challenge/
+      CodeUri: resume_lambda/
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
       - x86_64
       Events:
-        HelloWorld:
+        ResumeAPI:
           Type: Api #
           Properties:
-            Path: /hello
+            Path: /visitorCount
             Method: get
   
   ResumeBucket:
@@ -103,9 +102,9 @@ Resources:
   Route53Record:
     Type: AWS::Route53::RecordSetGroup
     Properties:
-      HostedZoneId:  !Ref HostedZoneId # TODO: Don't hardcode me
+      HostedZoneId:  !Ref HostedZoneId #
       RecordSets:
-        - Name: !Ref DomainName # TODO: Don't hardcode me
+        - Name: !Ref DomainName #
           Type: A
           AliasTarget:
             HostedZoneId: Z2FDTNDATAQYW2
