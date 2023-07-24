@@ -110,6 +110,19 @@ Resources:
             HostedZoneId: Z2FDTNDATAQYW2
             DNSName: !GetAtt CloudFrontDistro.DomainName
 
+  ResumeDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: visitorCountTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "visitsCount"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "visitsCount"
+          KeyType: "HASH"
+
+
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
     Properties:
