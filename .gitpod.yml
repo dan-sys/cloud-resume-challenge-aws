@@ -22,7 +22,6 @@ tasks:
         AWS_CLI_AUTO_PROMPT: on-partial
     init: |
         cd /workspace
-        curl "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip" -o "aws_sam_cliv2.zip"
-        unzip aws_sam_cliv2.zip
-        sudo ./aws/install
+        brew install aws/tap/aws-sam-cli
+        sam --version
         cd $THEIA_WORKSPACE_ROOT
