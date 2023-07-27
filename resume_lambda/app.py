@@ -18,9 +18,10 @@ def lambda_handler(event, context):
     """Sample pure Lambda function
     """
     logger.info(event)
-    print(event)
+    
     httpMethod = event['httpMethod']
-    countKey = event['queryStringParameters']['visitsCount']
+    countKey = table.attribute_definitions #event['queryStringParameters']['visitsCount']
+    print(countKey)
 
     if httpMethod == getMethod:
         responseGet = getCurrentVisitorCount(countKey)
