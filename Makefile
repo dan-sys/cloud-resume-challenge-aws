@@ -8,3 +8,9 @@ deploy-infra:
 
 deploy-site:
 	aws s3 sync ./resume-site s3://www.clouddanny.net
+
+invoke-local:
+	sam build && sam local invoke ResumeFunction
+
+invoke-remote:
+	sam build && sam remote invoke ResumeFunction

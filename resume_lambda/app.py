@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     """Sample pure Lambda function
     """
     logger.info(event)
-
+    print(event)
     httpMethod = event['httpMethod']
     countKey = event['queryStringParameters']['visitsCount']
 
