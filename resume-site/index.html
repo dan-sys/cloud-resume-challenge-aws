@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="styles.css">
         <title>Resume</title>
         <script>
-            fetch('https://g62pfaqks9.execute-api.us-east-1.amazonaws.com/Prod')
+            fetch('https://g62pfaqks9.execute-api.us-east-1.amazonaws.com/Prod/visitorCount')
                 .then(response => response.json())
                 .then((data) => {
                     document.getElementById('JSCountValue').innerText = data.CurrentCount

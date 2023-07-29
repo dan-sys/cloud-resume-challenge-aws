@@ -2,7 +2,7 @@ import json
 import boto3
 import logging
 from decimal import Decimal
-# import requests
+from custom_encoder import CustomEncoder
 
 
 logger = logging.getLogger()
@@ -12,22 +12,25 @@ dynamodbTableName = 'visitorCountTable'
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(dynamodbTableName)
 
-getMethod = 'GET'
+getMethod = "GET"
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
     """
-    logger.info(event)
-    
-    httpMethod = event['httpMethod']
-    countKey = ['visitsCount'] #event['queryStringParameters']['visitsCount']
+
+    httpMethod = event["httpMethod"]
+    countKey = "visitsCount" 
 
     if httpMethod == getMethod:
         responseGet = getCurrentVisitorCount(countKey)
-        if responseGet["body"]:
-            response = updateVisitorCount(countKey, int(Decimal(responseGet["body"])))
+
+        print("responseGEt body below")
+        print(responseGet['body'])
+
+        if responseGet['body'] == '{}': 
+            response = updateVisitorCount(countKey, 0)    
         else:
-            response = updateVisitorCount(countKey, 0)
+            response = updateVisitorCount(countKey, int(float(responseGet['body'])))
     else:
          response = buildResponse(404, 'Unsupported Request')
     
@@ -37,13 +40,13 @@ def getCurrentVisitorCount(tablePrtKey):
 
     try:
         response = table.get_item(
-            Key={
+            Key = {
                 'visitsCount': tablePrtKey
-                })
+                })      
         if 'Item' in response:
-            return buildResponse(200, response['Item']['visitCountValue'])
+            return buildResponse(200, response['Item']['visitsValue'])
         else:
-            return buildResponse(404, {'Message':'Count value was not found'})
+            return buildResponse(200, {})
     except:
         logger.exception('Error retrieving value from DyanmoTable !!!')   
 
@@ -52,9 +55,9 @@ def updateVisitorCount(countKey, upDateValue):
     try:
         response = table.update_item(
         Key={
-            'visitCount': countKey
+            'visitsCount': countKey
         },
-        UpdateExpression='SET visitCountValue = :increment',
+        UpdateExpression='SET visitsValue = :increment',
         ExpressionAttributeValues={
             ':increment': upDateValue + 1
         })
@@ -72,7 +75,7 @@ def buildResponse(statusCode, body=None):
 
     return{
         'statusCode': statusCode,
-        'body': json.dumps(body),
+        'body': json.dumps(body, cls=CustomEncoder),
         'headers': {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'

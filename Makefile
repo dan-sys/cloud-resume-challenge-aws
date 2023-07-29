@@ -14,3 +14,6 @@ invoke-local:
 
 invoke-remote:
 	sam build && sam remote invoke ResumeFunction
+
+invoke-api:
+	sam build && sam local start-api
