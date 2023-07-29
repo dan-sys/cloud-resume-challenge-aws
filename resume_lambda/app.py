@@ -20,8 +20,7 @@ def lambda_handler(event, context):
     logger.info(event)
     
     httpMethod = event['httpMethod']
-    countKey = table.attribute_definitions #event['queryStringParameters']['visitsCount']
-    print(countKey)
+    countKey = ['visitsCount'] #event['queryStringParameters']['visitsCount']
 
     if httpMethod == getMethod:
         responseGet = getCurrentVisitorCount(countKey)

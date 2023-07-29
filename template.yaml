@@ -96,7 +96,7 @@ Resources:
             Id: www.clouddanny.net.s3-website-us-east-1.amazonaws.com
             CustomOriginConfig:
               OriginProtocolPolicy: http-only
-        Enabled: "true"
+        Enabled: true
         DefaultRootObject: index.html
 
   Route53Record:
@@ -135,7 +135,7 @@ Resources:
     Properties:
       ResourceGroupName:
         Ref: ApplicationResourceGroup
-      AutoConfigurationEnabled: 'true'
+      AutoConfigurationEnabled: true
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
