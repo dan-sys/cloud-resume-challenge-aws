@@ -17,15 +17,12 @@ getMethod = "GET"
 def lambda_handler(event, context):
     """Sample pure Lambda function
     """
-
+    print(event)
     httpMethod = event["httpMethod"]
     countKey = "visitsCount" 
 
     if httpMethod == getMethod:
         responseGet = getCurrentVisitorCount(countKey)
-
-        print("responseGEt body below")
-        print(responseGet['body'])
 
         if responseGet['body'] == '{}': 
             response = updateVisitorCount(countKey, 0)    
@@ -33,7 +30,8 @@ def lambda_handler(event, context):
             response = updateVisitorCount(countKey, int(float(responseGet['body'])))
     else:
          response = buildResponse(404, 'Unsupported Request')
-    
+         
+    print(response)
     return response
 
 def getCurrentVisitorCount(tablePrtKey):
