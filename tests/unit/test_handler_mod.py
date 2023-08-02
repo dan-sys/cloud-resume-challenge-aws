@@ -62,30 +62,47 @@ def apigw_event():
         "path": "/examplepath",
     }
 
-def test_getCurrentVisitorCount(apigw_event,tablePrtKey):
+def test_getCurrentVisitorCount(apigw_event):
 
+    tablePrtKey = "visitsCount"
     assert apigw_event["httpMethod"] == "GET"
 
     Resp_get = app.getCurrentVisitorCount(tablePrtKey)
-    data = Resp_get["body"]
+    data = float(Resp_get["body"])
 
     assert Resp_get["statusCode"] == 200
 
-    assert data.isnumeric() or data == '{}'
+    assert float(data) or data
 
-def test_updateVisitorCount(countKey, upDateValue):
+def test_updateVisitorCount():
+    countKey = "visitsCount"
 
-    Resp_get = app.getCurrentVisitorCount(tablePrtKey)
-    upDateValue = int(float(responseGet["body"]))
+    Resp_get = app.getCurrentVisitorCount(countKey)
+    val_check = Resp_get["body"]
+    upDateValue = int(float(Resp_get["body"]))
 
-    assert upDateValue.isnumeric() or upDateValue == '{}'
+    assert float(val_check) or val_check
 
-    Resp_update = app.updateVisitorCount(countKey, upDateValue)
-   
+    Resp_update = app.updateVisitorCount(countKey, upDateValue-2)
     assert Resp_update["statusCode"] == 200
     data = Resp_update["body"]
 
+    val_apr_Upd = app.getCurrentVisitorCount(countKey)
+    assert val_apr_Upd["statusCode"] == 200
 
-    assert data["CurrentCount"] == upDateValue + 1
+    data_val_apr = float(val_apr_Upd["body"])
+
+    assert upDateValue  - data_val_apr == 1
    
+def test_lambda_handler(apigw_event):
+
+    response = app.lambda_handler(apigw_event, [])
+    assert response["statusCode"] == 200, "Error 404 one of the functions is buggy"
+
+    
+
+
+
+
+
 

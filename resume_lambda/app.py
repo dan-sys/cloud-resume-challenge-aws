@@ -2,7 +2,7 @@ import json
 import boto3
 import logging
 from decimal import Decimal
-from custom_encoder import CustomEncoder
+from .custom_encoder import CustomEncoder
 
 
 logger = logging.getLogger()
@@ -17,7 +17,6 @@ getMethod = "GET"
 def lambda_handler(event, context):
     """Sample pure Lambda function
     """
-    print(event)
     httpMethod = event["httpMethod"]
     countKey = "visitsCount" 
 
@@ -31,7 +30,6 @@ def lambda_handler(event, context):
     else:
          response = buildResponse(404, 'Unsupported Request')
          
-    print(response)
     return response
 
 def getCurrentVisitorCount(tablePrtKey):
