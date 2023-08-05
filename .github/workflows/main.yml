@@ -18,7 +18,9 @@ jobs:
           pip install pytest pytest-cov coverage flake8 moto boto3
       - name: test lambda-functionalities
         env:
-          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: cd tests/unit && pytest -k test -v ./ && cd ../../
       
 
