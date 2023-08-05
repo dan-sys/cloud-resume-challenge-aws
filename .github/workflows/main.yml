@@ -1,6 +1,9 @@
 name: main
 on: [push]
 
+env:
+
+
 jobs:
   test-infra:
     runs-on: ubuntu-latest
@@ -16,7 +19,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest pytest-cov coverage flake8 moto boto3
       - name: test lambda-functionalities
+        env:
+          AWS_DEFAULT_REGION: us-east-1
         run: cd tests/unit && pytest -k test -v ./ && cd ../../
+      
+
       
 
 
