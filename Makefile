@@ -17,3 +17,9 @@ invoke-remote:
 
 invoke-api:
 	sam build && sam local start-api
+
+kill-stack:
+	sam delete --stack-name cloudResume --no-prompts
+
+teardown: 
+	empty-bucket kill-stack

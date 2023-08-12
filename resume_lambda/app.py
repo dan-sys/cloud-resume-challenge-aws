@@ -1,9 +1,13 @@
 import json
 import boto3
 import logging
+import os
+import sys
 from decimal import Decimal
-from .custom_encoder import CustomEncoder
+from custom_encoder import CustomEncoder
 
+file_dir = os.path.dirname(__file__)
+sys.path.append(file_dir)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
