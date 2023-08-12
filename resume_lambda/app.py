@@ -4,10 +4,11 @@ import logging
 import os
 import sys
 from decimal import Decimal
-from custom_encoder import CustomEncoder
 
 file_dir = os.path.dirname(__file__)
 sys.path.append(file_dir)
+
+from custom_encoder import CustomEncoder
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
